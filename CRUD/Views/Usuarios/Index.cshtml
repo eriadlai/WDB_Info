@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CRUD.Models.Usuario>
+﻿@model CRUD.Data.ViewModels
+
 @{
     ViewData["Title"] = "Lista de Usuarios";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,12 +9,12 @@
 <div class="container">
     @if (TempData["message"] != null)
     {
-        <div class="alert alert-warning alert-dismissible fade show " role="alert" >
+        <div class="alert alert-warning alert-dismissible fade show " role="alert">
             @TempData["message"]
             <button type="button" class="close" date-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-        </div> 
+        </div>
     }
     <div class="row">
         <div class="col-sm-6">
@@ -25,23 +26,23 @@
     </div>
     <div class="row">
 
-        @if (Model.Count()>0)
+        @if (Model.listaUsuarios.Count() > 0)
         {
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <td>@Html.DisplayNameFor(m => m.id)</td>
-                        <td>@Html.DisplayNameFor(m => m.email)</td>
-                        <td>@Html.DisplayNameFor(m => m.nacimiento)</td>
-                        <td>@Html.DisplayNameFor(m => m.nombre)</td>
-                        <td>@Html.DisplayNameFor(m => m.apellido)</td>
-                        <td>@Html.DisplayNameFor(m => m.profesion)</td>
+                        <td>@Html.DisplayNameFor(m => m.listaUsuarios.First().id)</td>
+                        <td>@Html.DisplayNameFor(m => m.listaUsuarios.First().email)</td>
+                        <td>@Html.DisplayNameFor(m => m.listaUsuarios.First().nacimiento)</td>
+                        <td>@Html.DisplayNameFor(m => m.listaUsuarios.First().nombre)</td>
+                        <td>@Html.DisplayNameFor(m => m.listaUsuarios.First().apellido)</td>
+                        <td>@Html.DisplayNameFor(m => m.listaUsuarios.First().profesion)</td>
                         <td>Acciones</td>
                     </tr>
                 </thead>
                 <tbody>
 
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.listaUsuarios)
                     {
                         <tr>
                             <td>@item.id</td>
@@ -50,8 +51,10 @@
                             <td>@item.nombre</td>
                             <td>@item.apellido</td>
                             <td>@item.profesion</td>
-                            <td><a asp-controller="Usuarios" asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning">Editar</a>
-                            <a asp-controller="Usuarios" asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger">Delete</a></td>
+                            <td>
+                                <a asp-controller="Usuarios" asp-action="Edit" asp-route-id="@item.id" class="btn btn-warning">Editar</a>
+                                <a asp-controller="Usuarios" asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger">Delete</a>
+                            </td>
 
                         </tr>
                     }

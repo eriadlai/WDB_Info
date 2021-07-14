@@ -1,8 +1,10 @@
 ﻿using CRUD.Data;
 using CRUD.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,8 +20,21 @@ namespace CRUD.Controllers
         //Https Get Index
         public IActionResult Index()
         {
-            IEnumerable<Usuario> listUsuario = _context.Usuario;
-            return View(listUsuario);
+            if (HttpContext.Session.GetString("usuario") == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            if(HttpContext.Session.GetString("rol") != "Administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewModels modelo = new ViewModels();
+            modelo.listaUsuarios= _context.Usuario.Where(usu => usu.email != HttpContext.Session.GetString("usuario"));
+            modelo.Sesion = HttpContext.Session.GetString("usuario");
+            modelo.rol = HttpContext.Session.GetString("rol");
+            
+            return View(model:modelo);
         }
         //Https Post Create
         [HttpPost]
@@ -27,6 +42,7 @@ namespace CRUD.Controllers
         public IActionResult Create(Usuario usuario) {
             if (ModelState.IsValid)
             {
+               
                 _context.Usuario.Add(usuario);
                 _context.SaveChanges();
                 TempData["message"] = "El usuario ha sido creado";
@@ -38,11 +54,30 @@ namespace CRUD.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            if (HttpContext.Session.GetString("usuario") == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            if (HttpContext.Session.GetString("rol") != "Administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ViewModels modelo = new ViewModels();
+            modelo.Sesion = HttpContext.Session.GetString("usuario");
+            modelo.rol = HttpContext.Session.GetString("rol");
+            return View(modelo);
         }
         //Https Get Edit
         public IActionResult Edit(int? id)
         {
+            if (HttpContext.Session.GetString("usuario") == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            if (HttpContext.Session.GetString("rol") != "Administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null || id == 0)
             {
                 return NotFound();
@@ -53,7 +88,12 @@ namespace CRUD.Controllers
             {
                 return NotFound();
             }
-            return View(usuario);
+            ViewModels modelo = new ViewModels();
+            modelo.usuario = usuario;
+            modelo.Sesion = HttpContext.Session.GetString("usuario");
+            modelo.rol = HttpContext.Session.GetString("rol");
+
+            return View(modelo);
         }
         //Https Post Edit
         [HttpPost]
@@ -90,6 +130,14 @@ namespace CRUD.Controllers
         //Https Get Delete
         public IActionResult Delete(int? id)
         {
+            if (HttpContext.Session.GetString("usuario") == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            if (HttpContext.Session.GetString("rol") != "Administrador")
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null || id == 0)
             {
                 return NotFound();
@@ -100,7 +148,11 @@ namespace CRUD.Controllers
             {
                 return NotFound();
             }
-            return View(usuario);
+            ViewModels modelo = new ViewModels();
+            modelo.usuario = usuario;
+            modelo.Sesion = HttpContext.Session.GetString("usuario");
+            modelo.rol = HttpContext.Session.GetString("rol");
+            return View(modelo);
         }
     }
 }

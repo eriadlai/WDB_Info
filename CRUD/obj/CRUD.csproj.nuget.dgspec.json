@@ -46,6 +46,18 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Lorem.NET": {
+              "target": "Package",
+              "version": "[1.0.6, )"
+            },
+            "Microsoft.AspNet.Mvc": {
+              "target": "Package",
+              "version": "[5.2.7, )"
+            },
+            "Microsoft.AspNetCore.Session": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[5.0.7, )"

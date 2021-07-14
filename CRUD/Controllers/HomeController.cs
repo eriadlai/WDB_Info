@@ -1,9 +1,12 @@
-﻿using CRUD.Models;
+﻿using CRUD.Data;
+using CRUD.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,12 +23,30 @@ namespace CRUD.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if(HttpContext.Session.GetString("usuario") == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewModels modelo = new ViewModels();
+            modelo.Sesion = HttpContext.Session.GetString("usuario");
+            modelo.rol = HttpContext.Session.GetString("rol");
+            return View(model: modelo);
         }
-
+        public IActionResult Logout()
+        {
+           HttpContext.Session.Clear();
+           return RedirectToAction("Index", "Login");
+        }
         public IActionResult Privacy()
         {
-            return View();
+            if (HttpContext.Session.GetString("usuario") == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewModels modelo = new ViewModels();
+            modelo.Sesion = HttpContext.Session.GetString("usuario");
+            modelo.rol = HttpContext.Session.GetString("rol");
+            return View(modelo);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
